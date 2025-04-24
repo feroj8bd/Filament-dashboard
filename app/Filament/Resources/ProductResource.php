@@ -9,8 +9,10 @@ use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Form;
 use Filament\Forms\Components\Number;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
@@ -21,6 +23,7 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -39,17 +42,16 @@ class ProductResource extends Resource
                 TextInput::make('name')
                     ->label('Name')
                     ->required(),
-                Textarea::make('description')
-                    ->label('Description'),
+                
                 TextInput::make('price')
                     ->label('Price')
                     ->required(),
                 // SpatieMediaLibraryFileUpload::make('image')
                 //      ->collection('image'),
-                FileUpload::make('image'),
                 TextInput::make('sku')
-                    ->label('SKU')
-                    ->required(),
+                ->label('SKU')
+                ->required(),
+                FileUpload::make('image'),
                 TextInput::make('slug')
                     ->label('Slug') // This field is hidden in the form
                     ->hidden()
@@ -73,8 +75,26 @@ class ProductResource extends Resource
                 TextInput::make('stock')
                     ->numeric(),
                 TextInput::make('meta_title')
-                    ->label('Meta Title')
-            ]);
+                    ->label('Meta Title'),
+                RichEditor::make('description')
+                    ->label('Description')
+                    ->toolbarButtons([
+                        'attachFiles',
+                        // 'blockquote',
+                        'bold',
+                        'bulletList',
+                        'codeBlock',
+                        'h2',
+                        'h3',
+                        'italic',
+                        'link',
+                        'orderedList',
+                        'redo',
+                        'strike',
+                        'underline',
+                        'undo'
+                    ]),
+                ]);
            
     }
 
@@ -82,7 +102,10 @@ class ProductResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('Sl No')
+                    ->rowIndex(),
                 TextColumn::make('name'),
+                    // ->searchable(),
                 // TextColumn::make('description'),
                 TextColumn::make('price'),
                 TextColumn::make('sku'),
@@ -107,7 +130,7 @@ class ProductResource extends Resource
                             ->pluck('brand', 'brand')
                             ->toArray()
                     ),
-            ])
+                ],FiltersLayout:: AboveContent)
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\ViewAction::make(),
@@ -124,11 +147,12 @@ class ProductResource extends Resource
                 ]),
             ]);
     }
+    
 
     public static function getRelations(): array
     {
         return [
-            //
+           //
         ];
     }
 
@@ -138,6 +162,7 @@ class ProductResource extends Resource
             'index' => Pages\ListProducts::route('/'),
             'create' => Pages\CreateProduct::route('/create'),
             'edit' => Pages\EditProduct::route('/{record}/edit'),
+            
         ];
     }
 }

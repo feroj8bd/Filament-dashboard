@@ -14,4 +14,10 @@ class Product extends Model //implements HasMedia
     
     use HasFactory;
     protected $guarded = [];
+
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
 }

@@ -16,18 +16,18 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('image')->nullable();
-            $table->string('slug')->unique();
+            // $table->string('slug')->unique();
             $table->string('sku')->unique();
             $table->string('brand');
-            $table->string('model');
-            $table->string('color');
+            $table->string('model')->nullable();
+            $table->string('color')->nullable();
             $table->string('size');
             $table->boolean('status')->default(1);
-            $table->string('meta_title');
-            $table->string('meta_description');
-            $table->string('meta_image');
+            $table->string('meta_title')->nullable();
+            $table->string('meta_description')->nullable();
+            $table->string('meta_image')->nullable();;
             $table->decimal('price', 8, 2);
-            $table->integer('stock');
+            $table->integer('stock')->nullable();
             $table->timestamps();
         });
     }

@@ -17,9 +17,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('phone')->nullable();
             $table->string('address');
-            $table->foreignId('division')->constrained('divisions')->nullOnDelete();
-            $table->foreignId('district')->constrained('districts')->nullOnDelete();
-            $table->foreignId('area')->constrained('areas')->nullOnDelete();
             $table->boolean('status')->default(1);
             $table->timestamps();
             

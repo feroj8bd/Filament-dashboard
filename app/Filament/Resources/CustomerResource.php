@@ -9,6 +9,7 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -48,8 +49,8 @@ class CustomerResource extends Resource
                     ->label('District')
                     ->options([
                         'dhaka' => 'Dhaka Inside',
-                        'mymensingh' => 'Mymensingh Sadar',
-                        'rajshahi' => 'Rajshahi Sadar',
+                        'mymensingh Sadar' => 'Mymensingh Sadar',
+                        'rajshahi Sadar' => 'Rajshahi Sadar',
                     ])
                     // ->native(false)
                     ->required(),
@@ -58,8 +59,8 @@ class CustomerResource extends Resource
                     ->label('Area')
                     ->options([
                         'dhaka' => 'Dhaka Inside',
-                        'mymensingh' => 'Mymensingh Sadar',
-                        'rajshahi' => 'Rajshahi Sadar',
+                        'mymensingh ' => 'Mymensingh Sadar',
+                        'rajshahi mamur para' => 'Rajshahi mamur para',
                     ])
                     ->required(),
                
@@ -70,14 +71,35 @@ class CustomerResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('Sl No')
+                    ->rowIndex(),
+                TextColumn::make('name'),
+                    // ->searchable(),
+                // TextColumn::make('description'),
+                TextColumn::make('email')
+                    ->label('Email'),
+                TextColumn::make('phone')
+                    ->label('Phone'),
+                TextColumn::make('address')
+                    ->label('Address')
+                    ->formatStateUsing(function ($state, $record) {
+                        return "{$record->address}, {$record->area}, {$record->district}, {$record->division}";
+                    }),
+                
+                    
             ])
             ->filters([
                 //
             ])
             ->actions([
+                 Tables\Actions\ActionGroup::make([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
+                    ->dropdownPlacement('top-start')
+            ])
+
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
